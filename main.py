@@ -54,7 +54,18 @@ def handle_message(event):
     if user_input in REPLY_KEYWORDS:
         return
 
-    output = create_recipe(user_input)
+    # TODO: user_inputのパース
+    # parsed_input = parse_input(user_input)
+
+    # TODO: パースしたものを和英変換
+    # translated_input = translate_ja_to_en(parsed_input)
+
+    # TODO: ChatGPTの入力定型文に挿入
+    # chatgpt_input = build_chatgpt_input(translated_input)
+    chatgpt_input = user_input
+
+    # GPT-3によるレシピ生成
+    output = create_recipe(chatgpt_input)
 
     LINE_CHANNEL_ACCESS_TOKEN.reply_message(
         event.reply_token,
