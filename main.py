@@ -1,4 +1,3 @@
-import config   # 先ほど作成したconfig.pyをインポート
 from flask import Flask, request, abort
 
 from linebot import (
@@ -11,8 +10,10 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
 
+import config
+from gpt.reply import create_recipe
+
 app = Flask(__name__)
-app.secret_key = 'prev_msg'
 
 # config.pyで設定したチャネルアクセストークン
 LINE_CHANNEL_ACCESS_TOKEN = LineBotApi(config.LINE_CHANNEL_ACCESS_TOKEN)
@@ -53,9 +54,22 @@ def handle_message(event):
     if user_input in REPLY_KEYWORDS:
         return
 
+    # TODO: user_inputのパース
+    # parsed_input = parse_input(user_input)
+
+    # TODO: パースしたものを和英変換
+    # translated_input = translate_ja_to_en(parsed_input)
+
+    # TODO: ChatGPTの入力定型文に挿入
+    # chatgpt_input = build_chatgpt_input(translated_input)
+    chatgpt_input = user_input
+
+    # GPT-3によるレシピ生成
+    output = create_recipe(chatgpt_input)
+
     LINE_CHANNEL_ACCESS_TOKEN.reply_message(
         event.reply_token,
-        TextSendMessage(text=user_input)
+        TextSendMessage(text=output)
     )
 
 if __name__ == "__main__":
